@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="login_text_secondary">#DDE3BC</color>
+    <color name="login_heading">#3D4127</color>
+    <color name="login_body">#636B2F</color>
+    <color name="login_link">#636B2F</color>
+    <color name="login_button">#636B2F</color>
+    <color name="login_card">#FFFDF4</color>
+    <color name="login_card_stroke">#D4DE95</color>
+    <color name="login_input_fill">#BAC095</color>
+    <color name="login_badge">#33636B2F</color>
+</resources>

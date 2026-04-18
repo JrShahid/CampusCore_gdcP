@@ -1,0 +1,59 @@
+<resources>
+    <string-array name="session_subjects">
+        <item>@string/session_subject_placeholder</item>
+        <item>Mathematics</item>
+        <item>Physics</item>
+        <item>Computer Science</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="session_classes">
+        <item>@string/session_class_placeholder</item>
+        <item>BCA 1A</item>
+        <item>BCA 2B</item>
+        <item>BSc CS 3A</item>
+        <item>MCA 1C</item>
+    </string-array>
+
+    <string-array name="locator_subject_options">
+        <item>@string/classroom_locator_placeholder</item>
+        <item>@string/classroom_locator_next_class_option</item>
+        <item>Mathematics</item>
+        <item>Physics</item>
+        <item>Computer Science</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="classroom_slot_options">
+        <item>@string/classroom_setup_slot_placeholder</item>
+        <item>Slot 1</item>
+        <item>Slot 2</item>
+        <item>Slot 3</item>
+        <item>Slot 4</item>
+        <item>Slot 5</item>
+    </string-array>
+
+    <string-array name="study_material_file_types">
+        <item>@string/study_material_file_type_placeholder</item>
+        <item>PDF</item>
+        <item>PPT</item>
+        <item>DOC</item>
+        <item>XLS</item>
+    </string-array>
+
+    <string-array name="study_material_subject_filter_options">
+        <item>@string/study_material_subject_filter_placeholder</item>
+        <item>@string/study_material_all_subjects</item>
+        <item>Mathematics</item>
+        <item>Physics</item>
+        <item>Computer Science</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="assignment_deadline_options">
+        <item>@string/assignment_deadline_placeholder</item>
+        <item>1 day</item>
+        <item>3 days</item>
+        <item>7 days</item>
+    </string-array>
+</resources>
