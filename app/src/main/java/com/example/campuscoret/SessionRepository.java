@@ -18,6 +18,7 @@ public final class SessionRepository {
                 true
         );
         AttendanceRepository.seedAttendanceForSession(sessionId, className);
+        FirebaseCampusSync.publishSession(activeSession);
         return activeSession;
     }
 
@@ -39,6 +40,11 @@ public final class SessionRepository {
                 false,
                 false
         );
+        FirebaseCampusSync.publishSession(activeSession);
         return activeSession;
+    }
+
+    static void replaceFromFirebase(SessionRecord session) {
+        activeSession = session;
     }
 }

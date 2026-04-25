@@ -4,8 +4,10 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".CampusCoreApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,6 +16,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusCoreT">
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportGenerationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LiveMonitoringActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StudentPerformanceDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PerformanceAnalyticsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TeacherBehaviorRatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StudentExamResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StudentExamAttemptActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StudentExamsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TeacherExamPerformanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TeacherExamManagementActivity"
+            android:exported="false" />
         <activity
             android:name=".ReviewSubmissionsActivity"
             android:exported="false" />

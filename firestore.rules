@@ -1,0 +1,145 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function viewerProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function hasProfile() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function role() {
+      return hasProfile() ? viewerProfile().data.role : null;
+    }
+
+    function isAdmin() {
+      return role() == 'Admin';
+    }
+
+    function isTeacher() {
+      return role() == 'Teacher';
+    }
+
+    function isStudent() {
+      return role() == 'Student';
+    }
+
+    function emailMatchesStudent(studentEmail) {
+      return signedIn()
+        && request.auth.token.email != null
+        && studentEmail == request.auth.token.email;
+    }
+
+    function sameUserDoc(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow create: if sameUserDoc(userId)
+        && request.resource.data.role == 'Student'
+        && request.resource.data.email is string
+        && emailMatchesStudent(request.resource.data.email);
+      allow read: if sameUserDoc(userId) || isTeacher() || isAdmin();
+      allow update: if sameUserDoc(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /sessions/{sessionId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /attendance/{attendanceId} {
+      allow read: if isTeacher() || isAdmin()
+        || (isStudent() && emailMatchesStudent(resource.data.studentEmail));
+      allow create: if isTeacher() || isAdmin()
+        || (isStudent()
+          && emailMatchesStudent(request.resource.data.studentEmail)
+          && request.resource.data.studentEmail is string);
+      allow update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /attendanceSummaries/{summaryId} {
+      allow read: if isTeacher() || isAdmin()
+        || (isStudent() && emailMatchesStudent(resource.data.studentEmail));
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /assignments/{assignmentId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /assignmentSubmissions/{submissionId} {
+      allow read: if isTeacher() || isAdmin()
+        || (isStudent() && emailMatchesStudent(resource.data.studentId));
+      allow create: if isTeacher() || isAdmin()
+        || (isStudent()
+          && request.resource.data.studentId is string
+          && emailMatchesStudent(request.resource.data.studentId));
+      allow update: if isTeacher() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /studyMaterials/{materialId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /behaviorRatings/{ratingId} {
+      allow read: if isTeacher() || isAdmin()
+        || (isStudent() && emailMatchesStudent(resource.data.studentId));
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /exams/{examId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /examAttempts/{attemptId} {
+      allow read: if isTeacher() || isAdmin()
+        || (isStudent() && emailMatchesStudent(resource.data.studentId));
+      allow create: if isTeacher() || isAdmin()
+        || (isStudent()
+          && request.resource.data.studentId is string
+          && emailMatchesStudent(request.resource.data.studentId));
+      allow update: if isTeacher() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /studentActivity/{eventId} {
+      allow read: if isTeacher() || isAdmin();
+      allow create: if isTeacher() || isAdmin()
+        || (isStudent()
+          && request.resource.data.studentId is string
+          && emailMatchesStudent(request.resource.data.studentId));
+      allow update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /studentStatuses/{statusId} {
+      allow read: if isTeacher() || isAdmin();
+      allow create, update: if isTeacher() || isAdmin()
+        || (isStudent()
+          && request.resource.data.studentId is string
+          && emailMatchesStudent(request.resource.data.studentId));
+      allow delete: if isAdmin();
+    }
+
+    match /examParticipants/{participantId} {
+      allow read: if isTeacher() || isAdmin();
+      allow create, update: if isTeacher() || isAdmin()
+        || (isStudent()
+          && request.resource.data.studentId is string
+          && emailMatchesStudent(request.resource.data.studentId));
+      allow delete: if isAdmin();
+    }
+  }
+}

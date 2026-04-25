@@ -65,6 +65,14 @@ public class StudentDashboardActivity extends AppCompatActivity {
             intent.putExtra("student_class", studentClassName);
             startActivity(intent);
         });
+
+        Button takeExamsButton = findViewById(R.id.take_exams_button);
+        takeExamsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, StudentExamsActivity.class);
+            intent.putExtra("user_email", studentEmail);
+            intent.putExtra("student_class", studentClassName);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -100,6 +108,11 @@ public class StudentDashboardActivity extends AppCompatActivity {
     }
 
     private String resolveStudentClass(String email) {
+        StudentProfile profile = StudentDirectoryRepository.findStudentByEmail(email);
+        if (profile != null && profile.getClassName() != null && !profile.getClassName().isEmpty()) {
+            return profile.getClassName();
+        }
+
         if (email == null) {
             return "BCA 2B";
         }

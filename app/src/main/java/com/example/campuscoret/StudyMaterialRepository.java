@@ -17,7 +17,7 @@ public final class StudyMaterialRepository {
             String fileName,
             String uploadedBy
     ) {
-        MATERIALS.add(0, new StudyMaterial(
+        StudyMaterial material = new StudyMaterial(
                 title,
                 subjectName,
                 className,
@@ -25,7 +25,9 @@ public final class StudyMaterialRepository {
                 fileName,
                 uploadedBy,
                 System.currentTimeMillis()
-        ));
+        );
+        MATERIALS.add(0, material);
+        FirebaseCampusSync.publishStudyMaterial(material);
     }
 
     public static List<StudyMaterial> getMaterialsForClass(String className) {
@@ -56,5 +58,16 @@ public final class StudyMaterialRepository {
         materials.add(new StudyMaterial("Physics Lab Guide", "Physics", "BCA 2B", "PDF", "physics_lab_guide.pdf", "teacher@campus.edu", System.currentTimeMillis() - 43_200_000L));
         materials.add(new StudyMaterial("Calculus Worksheet", "Mathematics", "BCA 1A", "DOC", "calculus_practice.docx", "teacher@campus.edu", System.currentTimeMillis() - 21_600_000L));
         return materials;
+    }
+
+    static void replaceMaterialsFromFirebase(List<StudyMaterial> materials) {
+        MATERIALS.clear();
+        if (materials != null) {
+            MATERIALS.addAll(materials);
+        }
+    }
+
+    static List<StudyMaterial> exportMaterials() {
+        return new ArrayList<>(MATERIALS);
     }
 }

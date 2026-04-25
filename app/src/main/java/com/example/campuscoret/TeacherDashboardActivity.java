@@ -19,6 +19,10 @@ public class TeacherDashboardActivity extends AppCompatActivity {
         Button setClassroomButton = findViewById(R.id.set_classroom_button);
         Button uploadMaterialsButton = findViewById(R.id.upload_materials_button);
         Button manageAssignmentsButton = findViewById(R.id.manage_assignments_button);
+        Button createExamsButton = findViewById(R.id.create_exams_button);
+        Button rateBehaviorButton = findViewById(R.id.rate_behavior_button);
+        Button monitorButton = findViewById(R.id.open_monitor_button);
+        Button reportsButton = findViewById(R.id.open_reports_button);
         String email = getIntent().getStringExtra("user_email");
         welcomeText.setText(getString(R.string.dashboard_welcome_message, email));
 
@@ -43,6 +47,28 @@ public class TeacherDashboardActivity extends AppCompatActivity {
         manageAssignmentsButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, AssignmentManagementActivity.class);
             intent.putExtra("user_email", email);
+            startActivity(intent);
+        });
+
+        createExamsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TeacherExamManagementActivity.class);
+            intent.putExtra("user_email", email);
+            startActivity(intent);
+        });
+
+        rateBehaviorButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TeacherBehaviorRatingActivity.class);
+            intent.putExtra("user_email", email);
+            startActivity(intent);
+        });
+
+        monitorButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LiveMonitoringActivity.class);
+            startActivity(intent);
+        });
+
+        reportsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ReportGenerationActivity.class);
             startActivity(intent);
         });
     }

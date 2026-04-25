@@ -58,10 +58,20 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
             );
 
             switch (result.getStatus()) {
-                case SUCCESS:
+                case SUCCESS: {
+                    StudentProfile profile = StudentDirectoryRepository.findStudentByEmail(studentId);
+                    if (profile != null) {
+                        LiveMonitoringRepository.logStudentActivity(
+                                profile.getStudentEmail(),
+                                profile.getStudentName(),
+                                profile.getClassName(),
+                                "Submitted assignment: " + assignment.getTitle()
+                        );
+                    }
                     Toast.makeText(this, R.string.assignment_submission_success, Toast.LENGTH_SHORT).show();
                     finish();
                     break;
+                }
                 case DUPLICATE:
                     Toast.makeText(this, R.string.assignment_submission_duplicate, Toast.LENGTH_SHORT).show();
                     break;

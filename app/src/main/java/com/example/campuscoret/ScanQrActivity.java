@@ -76,6 +76,15 @@ public class ScanQrActivity extends AppCompatActivity {
             showResult(getString(R.string.qr_duplicate_title), getString(R.string.qr_duplicate_body));
             return;
         }
+        StudentProfile profile = StudentDirectoryRepository.findStudentByEmail(studentEmail);
+        if (profile != null) {
+            LiveMonitoringRepository.logStudentActivity(
+                    profile.getStudentEmail(),
+                    profile.getStudentName(),
+                    profile.getClassName(),
+                    "Marked attendance for " + activeSession.getSubjectName()
+            );
+        }
 
         showResult(
                 getString(R.string.qr_success_title),

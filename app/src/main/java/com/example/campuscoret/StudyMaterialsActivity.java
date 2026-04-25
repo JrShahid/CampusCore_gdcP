@@ -35,6 +35,15 @@ public class StudyMaterialsActivity extends AppCompatActivity {
         adapter = new StudyMaterialAdapter(new StudyMaterialAdapter.MaterialActionListener() {
             @Override
             public void onView(StudyMaterial material) {
+                StudentProfile profile = StudentDirectoryRepository.findStudentByEmail(getIntent().getStringExtra("user_email"));
+                if (profile != null) {
+                    LiveMonitoringRepository.logStudentActivity(
+                            profile.getStudentEmail(),
+                            profile.getStudentName(),
+                            profile.getClassName(),
+                            "Viewed material: " + material.getTitle()
+                    );
+                }
                 Toast.makeText(
                         StudyMaterialsActivity.this,
                         getString(R.string.study_material_view_toast, material.getTitle(), material.getFileName()),
@@ -44,6 +53,15 @@ public class StudyMaterialsActivity extends AppCompatActivity {
 
             @Override
             public void onDownload(StudyMaterial material) {
+                StudentProfile profile = StudentDirectoryRepository.findStudentByEmail(getIntent().getStringExtra("user_email"));
+                if (profile != null) {
+                    LiveMonitoringRepository.logStudentActivity(
+                            profile.getStudentEmail(),
+                            profile.getStudentName(),
+                            profile.getClassName(),
+                            "Downloaded material: " + material.getFileName()
+                    );
+                }
                 Toast.makeText(
                         StudyMaterialsActivity.this,
                         getString(R.string.study_material_download_toast, material.getFileName()),
