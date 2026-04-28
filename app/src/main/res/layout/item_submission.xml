@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@color/login_input_fill"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <TextView
+        android:id="@+id/submission_student_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/login_heading"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/submission_solution_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/login_heading" />
+    <TextView
+        android:id="@+id/submission_file_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/login_body" />
+    <TextView
+        android:id="@+id/submission_submitted_at"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/login_body" />
+    <TextView
+        android:id="@+id/submission_evaluation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/login_heading" />
+    <Button
+        android:id="@+id/submission_evaluate_button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/login_button"
+        android:text="@string/assignment_evaluate_button"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+</LinearLayout>
