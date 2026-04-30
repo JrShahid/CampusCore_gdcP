@@ -51,7 +51,7 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.ml.vision)
     implementation(libs.firebase.perf)
-    implementation(libs.firebase.storage)
+    //implementation(libs.firebase.storage)
     implementation(libs.googleid)
     implementation(libs.material)
     implementation(libs.activity)

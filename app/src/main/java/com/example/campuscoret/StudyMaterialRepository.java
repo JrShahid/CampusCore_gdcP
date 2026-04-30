@@ -15,6 +15,7 @@ public final class StudyMaterialRepository {
             String className,
             String fileType,
             String fileName,
+            String fileUrl,
             String uploadedBy
     ) {
         StudyMaterial material = new StudyMaterial(
@@ -23,6 +24,7 @@ public final class StudyMaterialRepository {
                 className,
                 fileType,
                 fileName,
+                fileUrl,
                 uploadedBy,
                 System.currentTimeMillis()
         );
@@ -53,10 +55,10 @@ public final class StudyMaterialRepository {
 
     private static List<StudyMaterial> buildSeededMaterials() {
         List<StudyMaterial> materials = new ArrayList<>();
-        materials.add(new StudyMaterial("Unit 1 Lecture Notes", "Computer Science", "BCA 2B", "PDF", "cs_unit1_notes.pdf", "teacher@campus.edu", System.currentTimeMillis() - 86_400_000L));
-        materials.add(new StudyMaterial("Boolean Algebra Slides", "Computer Science", "BCA 2B", "PPT", "boolean_algebra_intro.pptx", "teacher@campus.edu", System.currentTimeMillis() - 64_800_000L));
-        materials.add(new StudyMaterial("Physics Lab Guide", "Physics", "BCA 2B", "PDF", "physics_lab_guide.pdf", "teacher@campus.edu", System.currentTimeMillis() - 43_200_000L));
-        materials.add(new StudyMaterial("Calculus Worksheet", "Mathematics", "BCA 1A", "DOC", "calculus_practice.docx", "teacher@campus.edu", System.currentTimeMillis() - 21_600_000L));
+        materials.add(new StudyMaterial("Unit 1 Lecture Notes", "Computer Science", "BCA 2B", "PDF", "cs_unit1_notes.pdf", "", "teacher@campus.edu", System.currentTimeMillis() - 86_400_000L));
+        materials.add(new StudyMaterial("Boolean Algebra Slides", "Computer Science", "BCA 2B", "PPT", "boolean_algebra_intro.pptx", "", "teacher@campus.edu", System.currentTimeMillis() - 64_800_000L));
+        materials.add(new StudyMaterial("Physics Lab Guide", "Physics", "BCA 2B", "PDF", "physics_lab_guide.pdf", "", "teacher@campus.edu", System.currentTimeMillis() - 43_200_000L));
+        materials.add(new StudyMaterial("Calculus Worksheet", "Mathematics", "BCA 1A", "DOC", "calculus_practice.docx", "", "teacher@campus.edu", System.currentTimeMillis() - 21_600_000L));
         return materials;
     }
 

@@ -2,7 +2,6 @@ package com.example.campuscoret;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,7 +29,7 @@ public class UploadStudyMaterialActivity extends AppCompatActivity {
         titleInput = findViewById(R.id.material_title_input);
         fileNameInput = findViewById(R.id.material_file_name_input);
         latestUploadSummary = findViewById(R.id.material_latest_summary);
-        Button uploadButton = findViewById(R.id.upload_material_button);
+        android.widget.Button uploadButton = findViewById(R.id.upload_material_button);
 
         String teacherEmail = getIntent().getStringExtra("user_email");
         teacherInfo.setText(getString(R.string.study_material_teacher_info, teacherEmail));
@@ -79,7 +78,15 @@ public class UploadStudyMaterialActivity extends AppCompatActivity {
             return;
         }
 
-        StudyMaterialRepository.addMaterial(title, subjectName, className, fileType, fileName, teacherEmail);
+        StudyMaterialRepository.addMaterial(
+                title,
+                subjectName,
+                className,
+                fileType,
+                fileName,
+                fileName,
+                teacherEmail
+        );
         latestUploadSummary.setText(
                 getString(R.string.study_material_latest_summary, title, subjectName, className, fileType, fileName)
         );

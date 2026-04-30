@@ -6,6 +6,7 @@ public class StudyMaterial {
     private final String className;
     private final String fileType;
     private final String fileName;
+    private final String fileUrl;
     private final String uploadedBy;
     private final long uploadedAtMillis;
 
@@ -15,6 +16,7 @@ public class StudyMaterial {
             String className,
             String fileType,
             String fileName,
+            String fileUrl,
             String uploadedBy,
             long uploadedAtMillis
     ) {
@@ -23,6 +25,7 @@ public class StudyMaterial {
         this.className = className;
         this.fileType = fileType;
         this.fileName = fileName;
+        this.fileUrl = fileUrl;
         this.uploadedBy = uploadedBy;
         this.uploadedAtMillis = uploadedAtMillis;
     }
@@ -45,6 +48,10 @@ public class StudyMaterial {
 
     public String getFileName() {
         return fileName;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
     }
 
     public String getUploadedBy() {

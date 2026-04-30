@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "firebase deploy --only firestore": "campuscore-gdcp"
+  },
+  "targets": {},
+  "etags": {}
+}

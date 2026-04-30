@@ -503,6 +503,7 @@ public final class FirebaseCampusSync {
         data.put("className", material.getClassName());
         data.put("fileType", material.getFileType());
         data.put("fileName", material.getFileName());
+        data.put("fileUrl", material.getFileUrl());
         data.put("uploadedBy", material.getUploadedBy());
         data.put("uploadedAtMillis", material.getUploadedAtMillis());
         return data;
@@ -659,6 +660,7 @@ public final class FirebaseCampusSync {
                 stringValue(document, "className"),
                 stringValue(document, "fileType"),
                 stringValue(document, "fileName"),
+                stringValue(document, "fileUrl"),
                 stringValue(document, "uploadedBy"),
                 longValue(document, "uploadedAtMillis")
         );
