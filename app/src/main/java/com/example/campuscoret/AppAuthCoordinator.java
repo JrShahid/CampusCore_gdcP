@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -126,6 +127,88 @@ public final class AppAuthCoordinator {
                 });
     }
 
+    public static void createManagedAccount(
+            Activity activity,
+            String name,
+            String email,
+            String password,
+            String role,
+            String className,
+            AuthCallback callback
+    ) {
+        if (!isFirebaseAvailable(activity)) {
+            UserAccountRepository.RegistrationResult result = UserAccountRepository.registerAccount(
+                    activity,
+                    name,
+                    email,
+                    password,
+                    role,
+                    className
+            );
+            if (result.getStatus() == UserAccountRepository.RegistrationResult.Status.DUPLICATE) {
+                callback.onResult(AuthOutcome.duplicate());
+                return;
+            }
+            callback.onResult(AuthOutcome.success(result.getAccount(), false));
+            return;
+        }
+
+        FirebaseApp defaultApp = FirebaseApp.getInstance();
+        FirebaseOptions options = defaultApp.getOptions();
+        String secondaryAppName = "managed-auth-" + System.currentTimeMillis();
+        FirebaseApp secondaryApp = FirebaseApp.initializeApp(activity, options, secondaryAppName);
+        if (secondaryApp == null) {
+            callback.onResult(AuthOutcome.remoteError("Could not initialize a secondary Firebase Auth instance."));
+            return;
+        }
+
+        FirebaseAuth secondaryAuth = FirebaseAuth.getInstance(secondaryApp);
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        String normalizedEmail = email.trim().toLowerCase();
+        secondaryAuth.createUserWithEmailAndPassword(normalizedEmail, password)
+                .addOnCompleteListener(activity, task -> {
+                    if (!task.isSuccessful() || secondaryAuth.getCurrentUser() == null) {
+                        cleanupSecondaryApp(secondaryAuth, secondaryApp);
+                        callback.onResult(mapFirebaseFailure(task.getException()));
+                        return;
+                    }
+
+                    String uid = secondaryAuth.getCurrentUser().getUid();
+                    Map<String, Object> profile = new HashMap<>();
+                    profile.put("name", name);
+                    profile.put("email", normalizedEmail);
+                    profile.put("role", role);
+                    profile.put("className", className == null ? "" : className);
+                    profile.put("createdAt", System.currentTimeMillis());
+
+                    firestore.collection("users")
+                            .document(uid)
+                            .set(profile)
+                            .addOnSuccessListener(unused -> {
+                                UserAccount account = new UserAccount(name, normalizedEmail, password, role, className);
+                                if ("Student".equals(role)) {
+                                    StudentDirectoryRepository.upsertProfile(
+                                            new StudentProfile(name, normalizedEmail, className)
+                                    );
+                                }
+                                cleanupSecondaryApp(secondaryAuth, secondaryApp);
+                                callback.onResult(AuthOutcome.success(account, true));
+                            })
+                            .addOnFailureListener(exception -> {
+                                if (secondaryAuth.getCurrentUser() != null) {
+                                    secondaryAuth.getCurrentUser().delete()
+                                            .addOnCompleteListener(deleteTask -> {
+                                                cleanupSecondaryApp(secondaryAuth, secondaryApp);
+                                                callback.onResult(AuthOutcome.remoteError(exception.getMessage()));
+                                            });
+                                } else {
+                                    cleanupSecondaryApp(secondaryAuth, secondaryApp);
+                                    callback.onResult(AuthOutcome.remoteError(exception.getMessage()));
+                                }
+                            });
+                });
+    }
+
     private static AuthOutcome mapProfileSnapshot(DocumentSnapshot snapshot, String password) {
         if (!snapshot.exists()) {
             return AuthOutcome.notFound();
@@ -192,6 +275,17 @@ public final class AppAuthCoordinator {
             return true;
         }
         return FirebaseApp.initializeApp(context) != null;
+    }
+
+    private static void cleanupSecondaryApp(FirebaseAuth secondaryAuth, FirebaseApp secondaryApp) {
+        try {
+            secondaryAuth.signOut();
+        } catch (Exception ignored) {
+        }
+        try {
+            secondaryApp.delete();
+        } catch (Exception ignored) {
+        }
     }
 
     public interface AuthCallback {

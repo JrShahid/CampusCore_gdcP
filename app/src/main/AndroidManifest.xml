@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusCoreT">
         <activity
+            android:name=".AdminUserProvisioningActivity"
+            android:exported="false" />
+        <activity
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity

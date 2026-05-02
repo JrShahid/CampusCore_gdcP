@@ -15,11 +15,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_dashboard);
 
         TextView welcomeText = findViewById(R.id.dashboard_welcome);
+        Button userManagementButton = findViewById(R.id.open_user_management_button);
         Button analyticsButton = findViewById(R.id.open_analytics_button);
         Button monitoringButton = findViewById(R.id.open_monitoring_button);
         Button reportsButton = findViewById(R.id.open_reports_button);
         String email = getIntent().getStringExtra("user_email");
         welcomeText.setText(getString(R.string.dashboard_welcome_message, email));
+
+        userManagementButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminUserProvisioningActivity.class);
+            startActivity(intent);
+        });
 
         analyticsButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, PerformanceAnalyticsActivity.class);

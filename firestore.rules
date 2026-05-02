@@ -42,10 +42,11 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow create: if sameUserDoc(userId)
-        && request.resource.data.role == 'Student'
-        && request.resource.data.email is string
-        && emailMatchesStudent(request.resource.data.email);
+      allow create: if isAdmin()
+        || (sameUserDoc(userId)
+          && request.resource.data.role == 'Student'
+          && request.resource.data.email is string
+          && emailMatchesStudent(request.resource.data.email));
       allow read: if sameUserDoc(userId) || isTeacher() || isAdmin();
       allow update: if sameUserDoc(userId) || isAdmin();
       allow delete: if isAdmin();
