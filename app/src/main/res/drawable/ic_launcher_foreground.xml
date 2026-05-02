@@ -7,6 +7,11 @@
         android:fillColor="#F7F2DA"
         android:pathData="M54,20C35.2,20 20,35.2 20,54s15.2,34 34,34s34,-15.2 34,-34S72.8,20 54,20Z" />
     <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,20C35.2,20 20,35.2 20,54s15.2,34 34,34s34,-15.2 34,-34S72.8,20 54,20Z"
+        android:strokeColor="#3D4127"
+        android:strokeWidth="4" />
+    <path
         android:fillColor="#5F6C2D"
         android:pathData="M54,31L23,44L54,57L80.3,46V62.5H84.8V44Z" />
     <path

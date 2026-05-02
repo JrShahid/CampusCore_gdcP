@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CampusCoreT</string>
+    <string name="app_name">CampusCore</string>
     <string name="login_badge">Campus Access</string>
     <string name="login_title">Welcome back.</string>
     <string name="login_subtitle">Sign in to manage classes, attendance, assignments, and student updates from one place.</string>
