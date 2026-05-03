@@ -29,8 +29,9 @@ public class AdminUserProvisioningActivity extends AppCompatActivity {
         classSpinner = findViewById(R.id.admin_user_class_spinner);
         createButton = findViewById(R.id.admin_user_create_button);
 
-        bindSpinner(roleSpinner, R.array.admin_manage_user_roles);
-        bindSpinner(classSpinner, R.array.session_classes);
+        SpinnerUtils.bindSpinner(roleSpinner, R.array.admin_manage_user_roles);
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
+
         roleSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -83,6 +84,34 @@ public class AdminUserProvisioningActivity extends AppCompatActivity {
             }
 
             createButton.setEnabled(false);
+            AppAuthCoordinator.AuthCallback callback = outcome -> {
+                createButton.setEnabled(true);
+                if (outcome.getStatus() == AppAuthCoordinator.AuthOutcome.Status.DUPLICATE) {
+                    Toast.makeText(this, R.string.signup_duplicate_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (outcome.getStatus() == AppAuthCoordinator.AuthOutcome.Status.REMOTE_ERROR) {
+                    Toast.makeText(
+                            this,
+                            getString(R.string.firebase_error_message, outcome.getMessage()),
+                            Toast.LENGTH_LONG
+                    ).show();
+                    return;
+                }
+
+                Toast.makeText(
+                        this,
+                        getString(R.string.admin_manage_user_success, role, email),
+                        Toast.LENGTH_SHORT
+                ).show();
+                nameInput.setText("");
+                emailInput.setText("");
+                passwordInput.setText("");
+                roleSpinner.setSelection(0);
+                classSpinner.setSelection(0);
+                updateClassVisibility();
+            };
+
             AppAuthCoordinator.createManagedAccount(
                     this,
                     name,
@@ -90,46 +119,12 @@ public class AdminUserProvisioningActivity extends AppCompatActivity {
                     password,
                     role,
                     className,
-                    outcome -> {
-                        createButton.setEnabled(true);
-                        if (outcome.getStatus() == AppAuthCoordinator.AuthOutcome.Status.DUPLICATE) {
-                            Toast.makeText(this, R.string.signup_duplicate_error, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (outcome.getStatus() == AppAuthCoordinator.AuthOutcome.Status.REMOTE_ERROR) {
-                            Toast.makeText(
-                                    this,
-                                    getString(R.string.firebase_error_message, outcome.getMessage()),
-                                    Toast.LENGTH_LONG
-                            ).show();
-                            return;
-                        }
-
-                        Toast.makeText(
-                                this,
-                                getString(R.string.admin_manage_user_success, role, email),
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        nameInput.setText("");
-                        emailInput.setText("");
-                        passwordInput.setText("");
-                        roleSpinner.setSelection(0);
-                        classSpinner.setSelection(0);
-                        updateClassVisibility();
-                    }
+                    callback
             );
         });
     }
 
-    private void bindSpinner(Spinner spinner, int arrayResId) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                arrayResId,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
+
 
     private void updateClassVisibility() {
         String role = roleSpinner.getSelectedItem() == null ? "" : roleSpinner.getSelectedItem().toString();

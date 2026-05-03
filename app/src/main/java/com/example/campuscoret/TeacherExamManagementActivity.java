@@ -55,8 +55,8 @@ public class TeacherExamManagementActivity extends AppCompatActivity {
         emptyState = findViewById(R.id.exam_teacher_empty_state);
         RecyclerView recyclerView = findViewById(R.id.exam_teacher_recycler);
 
-        bindSpinner(subjectSpinner, R.array.session_subjects);
-        bindSpinner(classSpinner, R.array.session_classes);
+        SpinnerUtils.bindDynamicSpinner(subjectSpinner, MetadataRepository.getSubjects(), getString(R.string.session_subject_placeholder));
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
 
         adapter = new TeacherExamAdapter(new TeacherExamAdapter.TeacherExamActionListener() {
             @Override
@@ -92,15 +92,7 @@ public class TeacherExamManagementActivity extends AppCompatActivity {
         refreshExams();
     }
 
-    private void bindSpinner(Spinner spinner, int arrayResId) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                arrayResId,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
+
 
     private void addQuestionEditor(ExamQuestion question) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_exam_question_editor, questionContainer, false);
@@ -108,13 +100,7 @@ public class TeacherExamManagementActivity extends AppCompatActivity {
         questionIndex.setText(getString(R.string.exam_question_index, questionContainer.getChildCount() + 1));
 
         Spinner correctAnswerSpinner = view.findViewById(R.id.correct_answer_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.exam_correct_answer_options,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        correctAnswerSpinner.setAdapter(adapter);
+        SpinnerUtils.bindSpinner(correctAnswerSpinner, R.array.exam_correct_answer_options);
 
         if (question != null) {
             ((TextInputEditText) view.findViewById(R.id.question_text_input)).setText(question.getQuestionText());

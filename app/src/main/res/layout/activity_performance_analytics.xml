@@ -47,20 +47,12 @@
                 android:text="@string/analytics_subtitle"
                 android:textColor="@color/login_body" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/analytics_class_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="18dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
-                <Spinner
-                    android:id="@+id/analytics_class_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:background="@color/login_input_fill" />
 
             <Button
                 android:id="@+id/analytics_refresh_button"

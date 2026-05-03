@@ -50,13 +50,7 @@ public class ReportGenerationActivity extends AppCompatActivity {
     }
 
     private void bindClassSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.session_classes,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        classSpinner.setAdapter(adapter);
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
     }
 
     private void bindTypeSpinner() {

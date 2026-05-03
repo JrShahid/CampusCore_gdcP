@@ -56,71 +56,32 @@
                 android:textColor="@color/login_heading"
                 android:textStyle="bold" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/setup_class_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="22dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusBottomEnd="18dp"
-                app:boxCornerRadiusBottomStart="18dp"
-                app:boxCornerRadiusTopEnd="18dp"
-                app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
+                android:background="@color/login_input_fill"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
 
-                <Spinner
-                    android:id="@+id/setup_class_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/setup_subject_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="14dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusBottomEnd="18dp"
-                app:boxCornerRadiusBottomStart="18dp"
-                app:boxCornerRadiusTopEnd="18dp"
-                app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
+                android:background="@color/login_input_fill"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
 
-                <Spinner
-                    android:id="@+id/setup_subject_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/setup_slot_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="14dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusBottomEnd="18dp"
-                app:boxCornerRadiusBottomStart="18dp"
-                app:boxCornerRadiusTopEnd="18dp"
-                app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
-
-                <Spinner
-                    android:id="@+id/setup_slot_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:background="@color/login_input_fill"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

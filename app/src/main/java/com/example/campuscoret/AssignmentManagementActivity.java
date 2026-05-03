@@ -43,9 +43,9 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         Button createButton = findViewById(R.id.create_assignment_button);
         RecyclerView recyclerView = findViewById(R.id.assignment_teacher_recycler);
 
-        bindSpinner(subjectSpinner, R.array.session_subjects);
-        bindSpinner(classSpinner, R.array.session_classes);
-        bindSpinner(deadlineSpinner, R.array.assignment_deadline_options);
+        SpinnerUtils.bindDynamicSpinner(subjectSpinner, MetadataRepository.getSubjects(), getString(R.string.session_subject_placeholder));
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
+        SpinnerUtils.bindSpinner(deadlineSpinner, R.array.assignment_deadline_options);
 
         adapter = new AssignmentAdapter(new AssignmentAdapter.AssignmentActionListener() {
             @Override
@@ -77,15 +77,7 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         refreshAssignments();
     }
 
-    private void bindSpinner(Spinner spinner, int arrayResId) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                arrayResId,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
+
 
     private void createAssignment() {
         String title = titleInput.getText().toString().trim();

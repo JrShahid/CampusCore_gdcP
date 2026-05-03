@@ -26,13 +26,7 @@ public class PerformanceAnalyticsActivity extends AppCompatActivity {
         emptyState = findViewById(R.id.analytics_empty_state);
         RecyclerView recyclerView = findViewById(R.id.analytics_recycler);
 
-        ArrayAdapter<CharSequence> classAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.session_classes,
-                android.R.layout.simple_spinner_item
-        );
-        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        classSpinner.setAdapter(classAdapter);
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
 
         adapter = new StudentPerformanceAdapter(summary -> {
             Intent intent = new Intent(PerformanceAnalyticsActivity.this, StudentPerformanceDetailActivity.class);

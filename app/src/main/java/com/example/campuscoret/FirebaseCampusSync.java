@@ -6,7 +6,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -50,20 +49,36 @@ public final class FirebaseCampusSync {
         attachActivityListener();
         attachStatusListener();
         attachExamParticipantsListener();
-
-        bootstrapCollectionIfEmpty("attendanceSummaries", buildSeedAttendanceSummaries());
-        bootstrapCollectionIfEmpty("assignments", buildSeedAssignments());
-        bootstrapCollectionIfEmpty("assignmentSubmissions", buildSeedAssignmentSubmissions());
-        bootstrapCollectionIfEmpty("studyMaterials", buildSeedStudyMaterials());
-        bootstrapCollectionIfEmpty("behaviorRatings", buildSeedBehaviorRatings());
-        bootstrapCollectionIfEmpty("exams", buildSeedExams());
-        bootstrapCollectionIfEmpty("examAttempts", buildSeedExamAttempts());
-        bootstrapCollectionIfEmpty("studentActivity", buildSeedActivityEvents());
-        bootstrapCollectionIfEmpty("studentStatuses", buildSeedStudentStatuses());
+        attachClassesListener();
+        attachSubjectsListener();
     }
 
     public static boolean isAvailable() {
         return firestore != null;
+    }
+
+    public static void publishClass(String className) {
+        if (!isAvailable()) return;
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("name", className);
+        firestore.collection("classes").document(sanitizeId(className)).set(data);
+    }
+
+    public static void removeClass(String className) {
+        if (!isAvailable()) return;
+        firestore.collection("classes").document(sanitizeId(className)).delete();
+    }
+
+    public static void publishSubject(String subjectName) {
+        if (!isAvailable()) return;
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("name", subjectName);
+        firestore.collection("subjects").document(sanitizeId(subjectName)).set(data);
+    }
+
+    public static void removeSubject(String subjectName) {
+        if (!isAvailable()) return;
+        firestore.collection("subjects").document(sanitizeId(subjectName)).delete();
     }
 
     public static void publishSession(SessionRecord session) {
@@ -427,23 +442,28 @@ public final class FirebaseCampusSync {
         });
     }
 
-    private static void bootstrapCollectionIfEmpty(String collectionName, Map<String, Map<String, Object>> seedData) {
-        if (!isAvailable() || seedData.isEmpty()) {
-            return;
-        }
-        firestore.collection(collectionName)
-                .limit(1)
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (!snapshot.isEmpty()) {
-                        return;
-                    }
-                    for (Map.Entry<String, Map<String, Object>> entry : seedData.entrySet()) {
-                        firestore.collection(collectionName)
-                                .document(entry.getKey())
-                                .set(entry.getValue());
-                    }
-                });
+    private static void attachClassesListener() {
+        firestore.collection("classes").addSnapshotListener((snapshot, error) -> {
+            if (snapshot == null || error != null) return;
+            List<String> classes = new ArrayList<>();
+            for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                String name = doc.getString("name");
+                if (name != null) classes.add(name);
+            }
+            MetadataRepository.replaceClassesFromFirebase(classes);
+        });
+    }
+
+    private static void attachSubjectsListener() {
+        firestore.collection("subjects").addSnapshotListener((snapshot, error) -> {
+            if (snapshot == null || error != null) return;
+            List<String> subjects = new ArrayList<>();
+            for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                String name = doc.getString("name");
+                if (name != null) subjects.add(name);
+            }
+            MetadataRepository.replaceSubjectsFromFirebase(subjects);
+        });
     }
 
     private static Map<String, Object> toSessionMap(SessionRecord session) {
@@ -786,88 +806,6 @@ public final class FirebaseCampusSync {
                 longValue(document, "lastActiveMillis"),
                 stringValue(document, "lastAction")
         );
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedAttendanceSummaries() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (Map.Entry<String, AttendanceRepository.AttendanceStats> entry : AttendanceRepository.exportSummaryRecords().entrySet()) {
-            String[] parts = entry.getKey().split("\\|", 2);
-            if (parts.length < 2) {
-                continue;
-            }
-            Map<String, Object> row = new LinkedHashMap<>();
-            row.put("studentEmail", parts[0]);
-            row.put("className", parts[1]);
-            row.put("presentClasses", entry.getValue().getPresentClasses());
-            row.put("totalClasses", entry.getValue().getTotalClasses());
-            seeds.put(sanitizeId(entry.getKey()), row);
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedAssignments() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (Assignment assignment : AssignmentRepository.exportAssignments()) {
-            seeds.put(assignment.getAssignmentId(),
-                    toAssignmentMap(assignment, AssignmentRepository.getMaxMarksForAssignment(assignment.getAssignmentId())));
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedAssignmentSubmissions() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (AssignmentSubmission submission : AssignmentRepository.exportSubmissions()) {
-            seeds.put(submission.getSubmissionId(), toAssignmentSubmissionMap(submission));
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedStudyMaterials() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (StudyMaterial material : StudyMaterialRepository.exportMaterials()) {
-            seeds.put(buildStudyMaterialId(material), toStudyMaterialMap(material));
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedBehaviorRatings() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (BehaviorRating rating : BehaviorRepository.exportRatings().values()) {
-            seeds.put(sanitizeId(rating.getStudentId()), toBehaviorMap(rating));
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedExams() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (ExamRecord exam : ExamRepository.exportExams()) {
-            seeds.put(exam.getExamId(), toExamMap(exam));
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedExamAttempts() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (ExamAttempt attempt : ExamRepository.exportAttempts()) {
-            seeds.put(attempt.getAttemptId(), toExamAttemptMap(attempt));
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedActivityEvents() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (StudentActivityEvent event : LiveMonitoringRepository.exportEvents()) {
-            seeds.put(buildActivityId(event), toActivityMap(event));
-        }
-        return seeds;
-    }
-
-    private static Map<String, Map<String, Object>> buildSeedStudentStatuses() {
-        Map<String, Map<String, Object>> seeds = new LinkedHashMap<>();
-        for (StudentLiveStatus status : LiveMonitoringRepository.exportStatuses().values()) {
-            seeds.put(sanitizeId(status.getStudentId()), toStatusMap(status));
-        }
-        return seeds;
     }
 
     private static String buildStudyMaterialId(StudyMaterial material) {

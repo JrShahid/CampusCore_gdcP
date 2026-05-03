@@ -73,10 +73,6 @@ public final class UserAccountRepository {
         Map<String, UserAccount> accounts = new LinkedHashMap<>();
 
         if (stored == null || stored.isEmpty()) {
-            for (UserAccount account : buildDefaultAccounts()) {
-                accounts.put(normalizeEmail(account.getEmail()), account);
-            }
-            persistAccounts(context, accounts);
             return accounts;
         }
 
@@ -115,19 +111,6 @@ public final class UserAccountRepository {
                 .edit()
                 .putString(KEY_ACCOUNTS, builder.toString())
                 .apply();
-    }
-
-    private static List<UserAccount> buildDefaultAccounts() {
-        List<UserAccount> accounts = new ArrayList<>();
-        accounts.add(new UserAccount("Campus Admin", "admin@campus.edu", "campus123", "Admin", ""));
-        accounts.add(new UserAccount("Teacher", "teacher@campus.edu", "campus123", "Teacher", ""));
-        accounts.add(new UserAccount("Aarav Sharma", "aarav@campus.edu", "campus123", "Student", "BCA 1A"));
-        accounts.add(new UserAccount("Diya Patel", "diya@campus.edu", "campus123", "Student", "BCA 2B"));
-        accounts.add(new UserAccount("Rohan Verma", "rohan@campus.edu", "campus123", "Student", "BCA 2B"));
-        accounts.add(new UserAccount("Meera Nair", "meera@campus.edu", "campus123", "Student", "MCA 1C"));
-        accounts.add(new UserAccount("Kabir Singh", "kabir@campus.edu", "campus123", "Student", "BSc CS 3A"));
-        accounts.add(new UserAccount("Sana Khan", "sana@campus.edu", "campus123", "Student", "BCA 1A"));
-        return accounts;
     }
 
     private static String normalizeEmail(String email) {

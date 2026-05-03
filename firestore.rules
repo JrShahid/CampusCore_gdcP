@@ -31,6 +31,18 @@ service cloud.firestore {
       return role() == 'Student';
     }
 
+    function bootstrapOpen() {
+      return !exists(/databases/$(database)/documents/system/bootstrap);
+    }
+
+    function isBootstrapAdminCreate(userId) {
+      return bootstrapOpen()
+        && sameUserDoc(userId)
+        && request.resource.data.role == 'Admin'
+        && request.resource.data.email is string
+        && emailMatchesStudent(request.resource.data.email);
+    }
+
     function emailMatchesStudent(studentEmail) {
       return signedIn()
         && request.auth.token.email != null
@@ -43,6 +55,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow create: if isAdmin()
+        || isBootstrapAdminCreate(userId)
         || (sameUserDoc(userId)
           && request.resource.data.role == 'Student'
           && request.resource.data.email is string
@@ -50,6 +63,15 @@ service cloud.firestore {
       allow read: if sameUserDoc(userId) || isTeacher() || isAdmin();
       allow update: if sameUserDoc(userId) || isAdmin();
       allow delete: if isAdmin();
+    }
+
+    match /system/{documentId} {
+      allow read: if isAdmin();
+      allow create: if documentId == 'bootstrap'
+        && bootstrapOpen()
+        && isAdmin()
+        && request.resource.data.adminUid == request.auth.uid;
+      allow update, delete: if isAdmin();
     }
 
     match /sessions/{sessionId} {
@@ -141,6 +163,16 @@ service cloud.firestore {
           && request.resource.data.studentId is string
           && emailMatchesStudent(request.resource.data.studentId));
       allow delete: if isAdmin();
+    }
+
+    match /classes/{classId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /subjects/{subjectId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isAdmin();
     }
   }
 }

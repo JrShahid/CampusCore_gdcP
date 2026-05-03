@@ -6,7 +6,6 @@
     <string name="login_form_title">Login</string>
     <string name="login_form_subtitle">Use your campus email and password to continue. Your dashboard is chosen from the saved account profile.</string>
     <string name="login_role_hint">Role is detected automatically from your registered account.</string>
-    <string name="role_label">Account role</string>
     <string name="role_student">Student</string>
     <string name="role_teacher">Teacher</string>
     <string name="role_admin">Admin</string>
@@ -15,6 +14,7 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="login_button_text">Sign in</string>
     <string name="create_account">Need an account? Create a student account here.</string>
+
     <string name="invalid_email_error">Enter a valid email address.</string>
     <string name="invalid_password_error">Password must be at least 6 characters.</string>
     <string name="login_success_message">%1$s login successful for %2$s</string>
@@ -35,11 +35,15 @@
     <string name="signup_go_to_login">Back to login</string>
     <string name="firebase_error_message">Firebase error: %1$s</string>
     <string name="dashboard_welcome_message">Welcome, %1$s</string>
-    <string name="student_dashboard_subtitle">View your attendance, assignments, class schedule, and announcements from your student dashboard.</string>
     <string name="teacher_dashboard_subtitle">Manage classes, publish materials, track attendance, and stay on top of student progress.</string>
     <string name="admin_dashboard_subtitle">Oversee campus operations, user access, reporting, and system-wide academic activity.</string>
     <string name="student_dashboard_badge">Student workspace</string>
-    <string name="student_dashboard_section_title">Your Learning Tools</string>
+    <string name="dashboard_section_today">Today</string>
+    <string name="dashboard_section_learning">Learning</string>
+    <string name="dashboard_section_assessment">Assessment</string>
+    <string name="dashboard_section_review">Review</string>
+    <string name="dashboard_section_setup">Setup</string>
+    <string name="dashboard_section_oversight">Oversight</string>
     <string name="student_class_info">Assigned class: %1$s</string>
     <string name="student_live_session_status">Live now: %1$s for %2$s. Attendance is active.</string>
     <string name="student_no_live_session_banner">No active session right now for %1$s.</string>
@@ -49,7 +53,6 @@
     <string name="student_action_locate_classroom">Locate classroom</string>
     <string name="student_action_locate_classroom_desc">Find the exact building, floor, and room for a subject or your next scheduled class.</string>
     <string name="student_action_locate_classroom_cta">Find classroom</string>
-    <string name="student_join_session_success">Joined %1$s and marked attendance context.</string>
     <string name="student_no_live_session">No live class is available for your section yet.</string>
     <string name="student_action_view_materials">View materials</string>
     <string name="student_action_view_materials_desc">Access notes, slides, uploaded files, and classroom resources shared for your courses.</string>
@@ -61,7 +64,6 @@
     <string name="student_action_take_exams_desc">Start scheduled tests, review upcoming assessments, and manage your exam attempts on time.</string>
     <string name="student_action_take_exams_cta">Open exams</string>
     <string name="teacher_dashboard_badge">Teacher workspace</string>
-    <string name="teacher_dashboard_section_title">Teaching Tools</string>
     <string name="teacher_action_start_session">Start session</string>
     <string name="teacher_action_start_session_desc">Launch a live class session, mark attendance, and open the room for active learners.</string>
     <string name="teacher_action_start_session_cta">Begin class</string>
@@ -163,7 +165,7 @@
     <string name="classroom_setup_select_slot_error">Select a timetable slot before saving.</string>
     <string name="classroom_setup_fill_location_error">Enter building, floor, and room details.</string>
     <string name="classroom_setup_saved_toast">Classroom details saved for students.</string>
-    <string name="classroom_setup_saved_summary">%1$s for %2$s is saved in %3$s, %4$s, room %5$s, slot %6$s.</string>
+    <string name="classroom_setup_saved_summary">%1$s for %2$s is saved in %3$s, %4$s, room %5$s, slot %6$d.</string>
     <string name="study_material_upload_badge">Material upload</string>
     <string name="study_material_upload_title">Upload study material</string>
     <string name="study_material_upload_subtitle">Tag each material with class and subject so students can access the right digital resources.</string>
@@ -244,7 +246,7 @@
     <string name="exam_management_title">Create exams</string>
     <string name="exam_management_subtitle">Define exam timing, author MCQs, and review performance from one place.</string>
     <string name="exam_teacher_info">Teacher: %1$s</string>
-    <string name="exam_firestore_hint">Target storage: Cloud Firestore. This local prototype uses an in-memory repository until Firebase configuration is added.</string>
+    <string name="exam_firestore_hint">Target storage: Cloud Firestore.</string>
     <string name="exam_title_hint">Exam title</string>
     <string name="exam_duration_hint">Duration in minutes</string>
     <string name="exam_total_marks_hint">Total marks</string>
@@ -344,10 +346,22 @@
     <string name="admin_manage_user_badge">Admin control</string>
     <string name="admin_manage_user_title">Provision user accounts</string>
     <string name="admin_manage_user_subtitle">Create managed Teacher, Admin, or Student accounts without exposing those roles in public signup.</string>
+    <string name="admin_action_metadata">Campus metadata management</string>
+    <string name="admin_action_metadata_desc">Add or remove classes and subjects that power the dropdowns across the entire application.</string>
+    <string name="admin_action_metadata_cta">Manage classes &amp; subjects</string>
+    <string name="metadata_title">Campus Metadata</string>
+    <string name="metadata_subtitle">Add or remove classes and subjects.</string>
+    <string name="metadata_section_classes">Classes</string>
+    <string name="metadata_section_subjects">Subjects</string>
+    <string name="metadata_hint_class">New class name</string>
+    <string name="metadata_hint_subject">New subject name</string>
+    <string name="metadata_add_button">Add</string>
+    <string name="metadata_delete_desc">Delete</string>
     <string name="admin_manage_user_button">Create account</string>
     <string name="admin_manage_user_success">%1$s account created for %2$s.</string>
     <string name="admin_manage_user_role_placeholder">Select account role</string>
     <string name="admin_manage_user_role_error">Select which role you want to create.</string>
+
     <string name="performance_final_score">Final score: %1$s | Status: %2$s</string>
     <string name="performance_breakdown_line">Attendance %1$d%% | Assignments %2$d%% | Exams %3$d%% | Behavior %4$d%%</string>
     <string name="performance_detail_meta">%1$s - %2$s</string>

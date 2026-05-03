@@ -39,7 +39,7 @@ public class TeacherBehaviorRatingActivity extends AppCompatActivity {
         punctualityInput = findViewById(R.id.behavior_punctuality_input);
         respectInput = findViewById(R.id.behavior_respect_input);
 
-        bindClassSpinner();
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
         classSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
@@ -55,15 +55,7 @@ public class TeacherBehaviorRatingActivity extends AppCompatActivity {
         refreshStudents();
     }
 
-    private void bindClassSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.session_classes,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        classSpinner.setAdapter(adapter);
-    }
+
 
     private void refreshStudents() {
         String className = classSpinner.getSelectedItem() == null ? "" : classSpinner.getSelectedItem().toString();

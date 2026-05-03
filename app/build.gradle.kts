@@ -3,9 +3,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
-    alias(libs.plugins.google.firebase.crashlytics)
-    alias(libs.plugins.google.firebase.firebase.perf)
-
 }
 
 val keystoreProperties = Properties().apply {
@@ -64,17 +61,6 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
-    implementation(libs.credentials)
-    implementation(libs.credentials.play.services.auth)
-    implementation(libs.firebase.ai)
-    implementation(libs.firebase.config)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.functions)
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.perf)
-    //implementation(libs.firebase.storage)
-    implementation(libs.googleid)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
@@ -85,7 +71,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
-    implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
 }

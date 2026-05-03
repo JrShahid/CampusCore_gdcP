@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivity(intent);
         });
+
+
     }
 
     private void prefillFromSignup(EditText emailInput) {

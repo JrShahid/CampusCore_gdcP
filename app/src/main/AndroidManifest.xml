@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:name=".CampusCoreApplication"
         android:allowBackup="true"
@@ -18,6 +22,9 @@
         android:theme="@style/Theme.CampusCoreT">
         <activity
             android:name=".AdminUserProvisioningActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminMetadataActivity"
             android:exported="false" />
         <activity
             android:name=".SignUpActivity"

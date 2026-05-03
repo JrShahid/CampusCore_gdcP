@@ -1,5 +1,6 @@
 package com.example.campuscoret;
 
+import android.annotation.SuppressLint;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -36,7 +37,7 @@ public final class NotificationHelper {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat.from(context).notify(1001, builder.build());
+        postNotification(context, 1001, builder);
     }
 
     public static void notifySessionEnded(Context context, SessionRecord sessionRecord) {
@@ -55,7 +56,7 @@ public final class NotificationHelper {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat.from(context).notify(1002, builder.build());
+        postNotification(context, 1002, builder);
     }
 
     public static void notifyStudentSessionAvailable(Context context, SessionRecord sessionRecord) {
@@ -80,7 +81,7 @@ public final class NotificationHelper {
                 .setAutoCancel(true);
 
         lastStudentNotifiedSessionId = sessionRecord.getSessionId();
-        NotificationManagerCompat.from(context).notify(1003, builder.build());
+        postNotification(context, 1003, builder);
     }
 
     private static void ensureChannel(Context context) {
@@ -108,5 +109,17 @@ public final class NotificationHelper {
 
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
                 == android.content.pm.PackageManager.PERMISSION_GRANTED;
+    }
+
+    @SuppressLint("MissingPermission")
+    private static void postNotification(
+            Context context,
+            int notificationId,
+            NotificationCompat.Builder builder
+    ) {
+        if (!canPostNotifications(context)) {
+            return;
+        }
+        NotificationManagerCompat.from(context).notify(notificationId, builder.build());
     }
 }

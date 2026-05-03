@@ -153,25 +153,12 @@
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/signup_class_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusBottomEnd="18dp"
-                app:boxCornerRadiusBottomStart="18dp"
-                app:boxCornerRadiusTopEnd="18dp"
-                app:boxCornerRadiusTopStart="18dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
-
-                <Spinner
-                    android:id="@+id/signup_class_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:background="@color/login_input_fill" />
 
             <Button
                 android:id="@+id/signup_create_account_button"

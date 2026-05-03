@@ -16,6 +16,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         TextView welcomeText = findViewById(R.id.dashboard_welcome);
         Button userManagementButton = findViewById(R.id.open_user_management_button);
+        Button metadataButton = findViewById(R.id.open_metadata_management_button);
         Button analyticsButton = findViewById(R.id.open_analytics_button);
         Button monitoringButton = findViewById(R.id.open_monitoring_button);
         Button reportsButton = findViewById(R.id.open_reports_button);
@@ -24,6 +25,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         userManagementButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminUserProvisioningActivity.class);
+            startActivity(intent);
+        });
+
+        metadataButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminMetadataActivity.class);
             startActivity(intent);
         });
 

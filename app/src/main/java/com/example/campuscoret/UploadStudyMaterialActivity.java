@@ -34,22 +34,14 @@ public class UploadStudyMaterialActivity extends AppCompatActivity {
         String teacherEmail = getIntent().getStringExtra("user_email");
         teacherInfo.setText(getString(R.string.study_material_teacher_info, teacherEmail));
 
-        bindSpinner(subjectSpinner, R.array.session_subjects);
-        bindSpinner(classSpinner, R.array.session_classes);
-        bindSpinner(fileTypeSpinner, R.array.study_material_file_types);
+        SpinnerUtils.bindDynamicSpinner(subjectSpinner, MetadataRepository.getSubjects(), getString(R.string.session_subject_placeholder));
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
+        SpinnerUtils.bindSpinner(fileTypeSpinner, R.array.study_material_file_types);
 
         uploadButton.setOnClickListener(v -> uploadMaterial(teacherEmail));
     }
 
-    private void bindSpinner(Spinner spinner, int arrayResId) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                arrayResId,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
+
 
     private void uploadMaterial(String teacherEmail) {
         String subjectName = subjectSpinner.getSelectedItem().toString();

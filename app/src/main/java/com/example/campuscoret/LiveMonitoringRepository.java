@@ -16,10 +16,6 @@ public final class LiveMonitoringRepository {
     private static final Map<String, StudentLiveStatus> LAST_STATUS_BY_STUDENT = new LinkedHashMap<>();
     private static final Map<String, Set<String>> ACTIVE_EXAM_PARTICIPANTS = new LinkedHashMap<>();
 
-    static {
-        seedState();
-    }
-
     private LiveMonitoringRepository() {
     }
 
@@ -152,42 +148,10 @@ public final class LiveMonitoringRepository {
 
     private static List<StudentProfile> getAllStudents() {
         List<StudentProfile> students = new ArrayList<>();
-        students.addAll(StudentDirectoryRepository.getStudentsForClass("BCA 1A"));
-        students.addAll(StudentDirectoryRepository.getStudentsForClass("BCA 2B"));
-        students.addAll(StudentDirectoryRepository.getStudentsForClass("BSc CS 3A"));
-        students.addAll(StudentDirectoryRepository.getStudentsForClass("MCA 1C"));
-        return students;
-    }
-
-    private static void seedState() {
-        List<StudentProfile> students = getAllStudents();
-        long now = System.currentTimeMillis();
-        int index = 0;
-        for (StudentProfile profile : students) {
-            long lastSeen = now - (index * 90_000L);
-            String action = index % 3 == 0
-                    ? "Viewed study material"
-                    : index % 3 == 1
-                    ? "Opened dashboard"
-                    : "Checked assignments";
-            LAST_STATUS_BY_STUDENT.put(profile.getStudentEmail(), new StudentLiveStatus(
-                    profile.getStudentEmail(),
-                    profile.getStudentName(),
-                    profile.getClassName(),
-                    true,
-                    lastSeen,
-                    action
-            ));
-            RECENT_EVENTS.add(new StudentActivityEvent(
-                    profile.getStudentEmail(),
-                    profile.getStudentName(),
-                    profile.getClassName(),
-                    action,
-                    lastSeen
-            ));
-            index++;
+        for (String className : MetadataRepository.getClasses()) {
+            students.addAll(StudentDirectoryRepository.getStudentsForClass(className));
         }
-        Collections.sort(RECENT_EVENTS, (left, right) -> Long.compare(right.getOccurredAtMillis(), left.getOccurredAtMillis()));
+        return students;
     }
 
     static void replaceEventsFromFirebase(List<StudentActivityEvent> events) {
@@ -219,11 +183,4 @@ public final class LiveMonitoringRepository {
         }
     }
 
-    static List<StudentActivityEvent> exportEvents() {
-        return new ArrayList<>(RECENT_EVENTS);
-    }
-
-    static Map<String, StudentLiveStatus> exportStatuses() {
-        return new LinkedHashMap<>(LAST_STATUS_BY_STUDENT);
-    }
 }

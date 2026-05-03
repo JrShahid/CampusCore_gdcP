@@ -1,7 +1,6 @@
 package com.example.campuscoret;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudyMaterialsActivity extends AppCompatActivity {
@@ -78,13 +78,10 @@ public class StudyMaterialsActivity extends AppCompatActivity {
     }
 
     private void bindSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.study_material_subject_filter_options,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        subjectFilterSpinner.setAdapter(adapter);
+        List<String> options = new ArrayList<>();
+        options.add(getString(R.string.study_material_all_subjects));
+        options.addAll(MetadataRepository.getSubjects());
+        SpinnerUtils.bindDynamicSpinner(subjectFilterSpinner, options, getString(R.string.study_material_subject_filter_placeholder));
     }
 
     private void refreshMaterials() {

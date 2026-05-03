@@ -17,7 +17,6 @@ public final class SessionRepository {
                 true,
                 true
         );
-        AttendanceRepository.seedAttendanceForSession(sessionId, className);
         FirebaseCampusSync.publishSession(activeSession);
         return activeSession;
     }

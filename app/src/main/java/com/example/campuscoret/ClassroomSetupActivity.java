@@ -37,22 +37,14 @@ public class ClassroomSetupActivity extends AppCompatActivity {
         String email = getIntent().getStringExtra("user_email");
         teacherInfo.setText(getString(R.string.classroom_setup_teacher_info, email));
 
-        bindSpinner(classSpinner, R.array.session_classes);
-        bindSpinner(subjectSpinner, R.array.session_subjects);
-        bindSpinner(slotSpinner, R.array.classroom_slot_options);
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
+        SpinnerUtils.bindDynamicSpinner(subjectSpinner, MetadataRepository.getSubjects(), getString(R.string.session_subject_placeholder));
+        SpinnerUtils.bindSpinner(slotSpinner, R.array.classroom_slot_options);
 
         saveButton.setOnClickListener(v -> saveClassroomEntry());
     }
 
-    private void bindSpinner(Spinner spinner, int arrayResId) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                arrayResId,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
+
 
     private void saveClassroomEntry() {
         String className = classSpinner.getSelectedItem().toString();

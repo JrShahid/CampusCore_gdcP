@@ -89,53 +89,26 @@
                     android:minLines="3" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/assignment_subject_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="14dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
+                android:background="@color/login_input_fill" />
 
-                <Spinner
-                    android:id="@+id/assignment_subject_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/assignment_class_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="14dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
+                android:background="@color/login_input_fill" />
 
-                <Spinner
-                    android:id="@+id/assignment_class_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/assignment_deadline_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_marginTop="14dp"
-                app:boxBackgroundColor="@color/login_input_fill"
-                app:boxBackgroundMode="filled"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
-
-                <Spinner
-                    android:id="@+id/assignment_deadline_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:background="@color/login_input_fill" />
 
             <Button
                 android:id="@+id/create_assignment_button"

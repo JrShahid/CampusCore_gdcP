@@ -209,6 +209,7 @@ public final class AppAuthCoordinator {
                 });
     }
 
+
     private static AuthOutcome mapProfileSnapshot(DocumentSnapshot snapshot, String password) {
         if (!snapshot.exists()) {
             return AuthOutcome.notFound();

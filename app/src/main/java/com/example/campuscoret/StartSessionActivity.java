@@ -62,8 +62,8 @@ public class StartSessionActivity extends AppCompatActivity {
         sessionQrLabel = findViewById(R.id.session_qr_label);
         RecyclerView attendanceRecycler = findViewById(R.id.attendance_recycler);
 
-        bindSpinner(subjectSpinner, R.array.session_subjects);
-        bindSpinner(classSpinner, R.array.session_classes);
+        SpinnerUtils.bindDynamicSpinner(subjectSpinner, MetadataRepository.getSubjects(), getString(R.string.session_subject_placeholder));
+        SpinnerUtils.bindDynamicSpinner(classSpinner, MetadataRepository.getClasses(), getString(R.string.session_class_placeholder));
 
         attendanceAdapter = new AttendanceAdapter();
         attendanceRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -117,15 +117,7 @@ public class StartSessionActivity extends AppCompatActivity {
         );
     }
 
-    private void bindSpinner(Spinner spinner, int arrayResId) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                arrayResId,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
+
 
     private void populateActiveSession(SessionRecord sessionRecord) {
         if (sessionRecord == null) {

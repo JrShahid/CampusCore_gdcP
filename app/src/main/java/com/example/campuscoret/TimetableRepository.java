@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public final class TimetableRepository {
-    private static final List<TimetableEntry> ENTRIES = buildEntries();
+    private static final List<TimetableEntry> ENTRIES = new ArrayList<>();
 
     private TimetableRepository() {
     }
@@ -88,16 +88,4 @@ public final class TimetableRepository {
         return 5;
     }
 
-    private static List<TimetableEntry> buildEntries() {
-        List<TimetableEntry> entries = new ArrayList<>();
-        entries.add(new TimetableEntry("BCA 1A", "Mathematics", "Academic Block A", "Floor 1", "A-104", 1));
-        entries.add(new TimetableEntry("BCA 1A", "English", "Language Wing", "Floor 2", "L-203", 3));
-        entries.add(new TimetableEntry("BCA 2B", "Computer Science", "Technology Block", "Floor 3", "T-307", 2));
-        entries.add(new TimetableEntry("BCA 2B", "Physics", "Science Block", "Floor 1", "S-112", 4));
-        entries.add(new TimetableEntry("BSc CS 3A", "Computer Science", "Innovation Centre", "Floor 4", "I-409", 2));
-        entries.add(new TimetableEntry("BSc CS 3A", "Mathematics", "Academic Block B", "Floor 2", "B-218", 5));
-        entries.add(new TimetableEntry("MCA 1C", "Physics", "Research Wing", "Floor 2", "R-205", 1));
-        entries.add(new TimetableEntry("MCA 1C", "Computer Science", "Technology Block", "Floor 5", "T-512", 3));
-        return entries;
-    }
 }

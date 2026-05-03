@@ -2,13 +2,15 @@ package com.example.campuscoret;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClassroomLocatorActivity extends AppCompatActivity {
     private Spinner subjectSpinner;
@@ -66,12 +68,9 @@ public class ClassroomLocatorActivity extends AppCompatActivity {
     }
 
     private void bindSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.locator_subject_options,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        subjectSpinner.setAdapter(adapter);
+        List<String> options = new java.util.ArrayList<>();
+        options.add(getString(R.string.classroom_locator_next_class_option));
+        options.addAll(MetadataRepository.getSubjects());
+        SpinnerUtils.bindDynamicSpinner(subjectSpinner, options, getString(R.string.classroom_locator_placeholder));
     }
 }

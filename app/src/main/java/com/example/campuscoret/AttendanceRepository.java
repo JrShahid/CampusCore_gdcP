@@ -7,24 +7,9 @@ import java.util.Map;
 
 public final class AttendanceRepository {
     private static final Map<String, List<AttendanceRecord>> ATTENDANCE_BY_SESSION = new LinkedHashMap<>();
-    private static final Map<String, AttendanceSummary> ATTENDANCE_SUMMARIES = buildAttendanceSummaries();
+    private static final Map<String, AttendanceSummary> ATTENDANCE_SUMMARIES = new LinkedHashMap<>();
 
     private AttendanceRepository() {
-    }
-
-    public static void seedAttendanceForSession(String sessionId, String className) {
-        List<AttendanceRecord> records = new ArrayList<>();
-        long now = System.currentTimeMillis();
-
-        records.add(new AttendanceRecord(sessionId, "Aarav Sharma", "aarav@" + sanitizeClassName(className) + ".edu", now - 420000, "Present"));
-        records.add(new AttendanceRecord(sessionId, "Diya Patel", "diya@" + sanitizeClassName(className) + ".edu", now - 240000, "Present"));
-        records.add(new AttendanceRecord(sessionId, "Kabir Singh", "kabir@" + sanitizeClassName(className) + ".edu", now - 120000, "Late"));
-        records.add(new AttendanceRecord(sessionId, "Meera Nair", "meera@" + sanitizeClassName(className) + ".edu", now - 60000, "Present"));
-
-        ATTENDANCE_BY_SESSION.put(sessionId, records);
-        for (AttendanceRecord record : records) {
-            FirebaseCampusSync.publishAttendanceRecord(record);
-        }
     }
 
     public static List<AttendanceRecord> getAttendanceForSession(String sessionId) {
@@ -95,19 +80,6 @@ public final class AttendanceRepository {
         }
     }
 
-    static Map<String, AttendanceStats> exportSummaryRecords() {
-        Map<String, AttendanceStats> export = new LinkedHashMap<>();
-        for (Map.Entry<String, AttendanceSummary> entry : ATTENDANCE_SUMMARIES.entrySet()) {
-            AttendanceSummary summary = entry.getValue();
-            export.put(entry.getKey(), new AttendanceStats(summary.presentClasses, summary.totalClasses));
-        }
-        return export;
-    }
-
-    private static String sanitizeClassName(String className) {
-        return className.toLowerCase().replace(" ", "").replace("/", "");
-    }
-
     public static int getPresentClasses(String studentEmail, String className) {
         AttendanceSummary summary = ATTENDANCE_SUMMARIES.get(buildStudentKey(studentEmail, className));
         return summary == null ? 0 : summary.presentClasses;
@@ -128,17 +100,6 @@ public final class AttendanceRepository {
 
     private static String buildStudentKey(String studentEmail, String className) {
         return studentEmail.toLowerCase() + "|" + className;
-    }
-
-    private static Map<String, AttendanceSummary> buildAttendanceSummaries() {
-        Map<String, AttendanceSummary> summaries = new LinkedHashMap<>();
-        summaries.put(buildStudentKey("aarav@campus.edu", "BCA 1A"), new AttendanceSummary(42, 50));
-        summaries.put(buildStudentKey("sana@campus.edu", "BCA 1A"), new AttendanceSummary(36, 50));
-        summaries.put(buildStudentKey("diya@campus.edu", "BCA 2B"), new AttendanceSummary(43, 50));
-        summaries.put(buildStudentKey("rohan@campus.edu", "BCA 2B"), new AttendanceSummary(34, 50));
-        summaries.put(buildStudentKey("meera@campus.edu", "MCA 1C"), new AttendanceSummary(45, 50));
-        summaries.put(buildStudentKey("kabir@campus.edu", "BSc CS 3A"), new AttendanceSummary(39, 50));
-        return summaries;
     }
 
     public static final class AttendanceStats {
