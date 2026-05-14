@@ -1,0 +1,102 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function currentUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return signedIn() && currentUser().role == "admin";
+    }
+
+    function isTeacher() {
+      return signedIn() && currentUser().role == "teacher";
+    }
+
+    function isStudent() {
+      return signedIn() && currentUser().role == "student";
+    }
+
+    function validAttendanceWrite(attendanceId) {
+      return request.resource.data.attendanceId == attendanceId
+        && request.resource.data.teacherUid == request.auth.uid
+        && request.resource.data.studentUid is string
+        && request.resource.data.studentName is string
+        && request.resource.data.rollNumber is string
+        && request.resource.data.subject is string
+        && request.resource.data.semester is string
+        && request.resource.data.department is string
+        && request.resource.data.date is string
+        && request.resource.data.status in ["Present", "Absent"];
+    }
+
+    function validNoteWrite(noteId) {
+      return request.resource.data.noteId == noteId
+        && request.resource.data.uploadedByUid == request.auth.uid
+        && request.resource.data.title is string
+        && request.resource.data.subjectCode is string
+        && request.resource.data.subjectName is string
+        && request.resource.data.department is string
+        && request.resource.data.semester is string
+        && request.resource.data.uploadedByName is string
+        && request.resource.data.pdfUrl is string
+        && request.resource.data.pdfUrl.matches("^https://.*")
+        && request.resource.data.fileName is string;
+    }
+
+    match /users/{userId} {
+      allow create: if signedIn() && request.auth.uid == userId
+        && request.resource.data.role == "student";
+      allow read: if (signedIn() && request.auth.uid == userId)
+        || isAdmin()
+        || (isTeacher() && resource.data.role == "student");
+      allow update: if isAdmin()
+        || (signedIn()
+          && request.auth.uid == userId
+          && request.resource.data.role == resource.data.role);
+      allow delete: if isAdmin();
+    }
+
+    match /attendanceRecords/{attendanceId} {
+      allow create: if isTeacher()
+        && validAttendanceWrite(attendanceId);
+      allow update: if isTeacher()
+        && resource.data.teacherUid == request.auth.uid
+        && request.resource.data.studentUid == resource.data.studentUid
+        && validAttendanceWrite(attendanceId);
+      allow read: if isAdmin()
+        || (isTeacher() && resource.data.teacherUid == request.auth.uid)
+        || (isStudent() && resource.data.studentUid == request.auth.uid);
+    }
+
+    match /notes/{noteId} {
+      allow create: if isTeacher()
+        && validNoteWrite(noteId);
+      allow read: if isAdmin()
+        || (isTeacher() && resource.data.uploadedByUid == request.auth.uid)
+        || (isStudent()
+          && resource.data.department == currentUser().department
+          && resource.data.semester == currentUser().semester);
+      allow update: if isTeacher()
+        && resource.data.uploadedByUid == request.auth.uid
+        && request.resource.data.uploadedByUid == resource.data.uploadedByUid
+        && validNoteWrite(noteId);
+      allow delete: if isTeacher()
+        && resource.data.uploadedByUid == request.auth.uid;
+    }
+
+    match /academic/{document=**} {
+      allow read: if signedIn();
+      allow write: if isTeacher() || isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

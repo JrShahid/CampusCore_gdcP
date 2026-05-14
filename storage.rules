@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function currentUser() {
+      return firestore.get(
+        /databases/(default)/documents/users/$(request.auth.uid)
+      ).data;
+    }
+
+    function isTeacher() {
+      return signedIn() && currentUser().role == "teacher";
+    }
+
+    match /notes/{department}/{semester}/{subjectCode}/{fileName} {
+      allow read: if signedIn();
+      allow write: if isTeacher()
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType == "application/pdf";
+    }
+  }
+}

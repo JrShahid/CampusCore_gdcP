@@ -1,0 +1,81 @@
+package com.example.campuscore.activities.student;
+
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.example.campuscore.R;
+import com.example.campuscore.databinding.ActivityDashboardBottomBinding;
+import com.example.campuscore.firebase.FirebaseUserRepository;
+import com.example.campuscore.fragments.attendance.StudentAttendanceFragment;
+import com.example.campuscore.fragments.HomeFragment;
+import com.example.campuscore.fragments.notes.StudentNotesFragment;
+import com.example.campuscore.fragments.ProfileFragment;
+import com.example.campuscore.fragments.QuizFragment;
+import com.example.campuscore.utils.IntentConstants;
+import com.example.campuscore.utils.NavigationUtils;
+
+public class StudentDashboardActivity extends AppCompatActivity {
+    private ActivityDashboardBottomBinding binding;
+    private FirebaseUserRepository repository;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityDashboardBottomBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        repository = new FirebaseUserRepository();
+
+        binding.toolbar.setTitle(R.string.student_dashboard);
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.nav_logout) {
+                repository.logout();
+                NavigationUtils.openLoginAndClear(this);
+                return true;
+            }
+            return false;
+        });
+
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            Fragment fragment;
+            int id = item.getItemId();
+            if (id == R.id.nav_attendance) {
+                fragment = StudentAttendanceFragment.newInstance();
+            } else if (id == R.id.nav_notes) {
+                fragment = StudentNotesFragment.newInstance();
+            } else if (id == R.id.nav_quiz) {
+                fragment = QuizFragment.create();
+            } else if (id == R.id.nav_profile) {
+                fragment = ProfileFragment.create(userName(), userEmail(), FirebaseUserRepository.ROLE_STUDENT);
+            } else {
+                fragment = HomeFragment.newInstance(FirebaseUserRepository.ROLE_STUDENT);
+            }
+            show(fragment);
+            return true;
+        });
+
+        if (savedInstanceState == null) {
+            show(HomeFragment.newInstance(FirebaseUserRepository.ROLE_STUDENT));
+        }
+    }
+
+    private void show(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commit();
+    }
+
+    private String userName() {
+        return getIntent().getStringExtra(IntentConstants.EXTRA_USER_NAME) == null
+                ? "Student"
+                : getIntent().getStringExtra(IntentConstants.EXTRA_USER_NAME);
+    }
+
+    private String userEmail() {
+        return getIntent().getStringExtra(IntentConstants.EXTRA_USER_EMAIL) == null
+                ? ""
+                : getIntent().getStringExtra(IntentConstants.EXTRA_USER_EMAIL);
+    }
+}
